@@ -13,7 +13,7 @@ namespace TCPClient
                 // connected to the same address as specified by the server, port
                 // combination.
                 Int32 port = 520;
-                string server = "192.168.56.1";
+                string server = "IPAddress Goes Here";
 
 
                 // Prefer using declaration to ensure the instance is Disposed later.

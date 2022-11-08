@@ -10,9 +10,9 @@ namespace TCPListener
             TcpListener? server = null;
             try
             {
-                // Set the TcpListener on port 13000.
+                // Set the TcpListener port.
                 Int32 port = 520;
-                IPAddress localAddr = IPAddress.Parse("192.168.56.1");
+                IPAddress localAddr = IPAddress.Parse("IPAddress Goes Here");
 
                 // TcpListener server = new TcpListener(port);
                 server = new TcpListener(localAddr, port);

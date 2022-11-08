@@ -7,9 +7,7 @@ namespace TCPListener
 {
     public class DataAccess
     {
-        private static readonly string _connectionString = @"Data Source=ABHEELENOVO\SQLEXPRESS;Initial Catalog = SQLContactsDB; Integrated Security = True;";
-
-
+        private static readonly string _connectionString = "Connection String Goes Here";
 
         public static string RetrieveItemInfo(string barcode)
         {
