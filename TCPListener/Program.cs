@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Net;
+﻿using Topshelf;
 
 namespace TCPListener
 {
@@ -7,72 +6,28 @@ namespace TCPListener
     {
         static void Main()
         {
-            TcpListener? server = null;
-            try
+            //Thread t = new Thread(delegate ()
+            //{
+            //    Server myServer = new Server("192.168.0.66", 520);
+            //});
+            //t.Start();
+            var exitCode = HostFactory.Run(x =>
             {
-                // Set the TcpListener port.
-                Int32 port = 520;
-                IPAddress localAddr = IPAddress.Parse("IPAddress Goes Here");
-
-                // TcpListener server = new TcpListener(port);
-                server = new TcpListener(localAddr, port);
-
-                // Start listening for client requests.
-                server.Start();
-
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String? data = null;
-
-                // Enter the listening loop.
-                while (true)
+                x.Service<Server>(s =>
                 {
-                    Console.Write("Waiting for a connection... ");
+                    s.ConstructUsing(server => new Server("192.168.0.66", 520));
+                    s.WhenStarted(server => server.StartService());
+                    s.WhenStopped(server => server.StopService());
+                });
+                x.RunAsLocalSystem();
+                x.SetServiceName("HospitalScannersTCPServer");
+                x.SetDisplayName("Hospital Scanners TCP Server");
+                x.SetDescription("TCP Servers for Hospital Scanners");
 
-                    // Perform a blocking call to accept requests.
-                    // You could also use server.AcceptSocket() here.
-                    using TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
+            });
 
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
-
-                        // Process the data sent by the client.
-                        string response = DataAccess.RetrieveItemInfo(data);
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(response);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", response);
-                    }
-
-                    // Shutdown and end the connection
-                    client.Close();
-                }
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            finally
-            {
-                server!.Stop();
-            }
-
-            Console.WriteLine("\nHit enter to continue...");
-            Console.Read();
+            int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
+            Environment.ExitCode = exitCodeValue;       
         }
     }
 }

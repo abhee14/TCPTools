@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using Topshelf;
 
 namespace TCPClient
 {
@@ -13,7 +14,7 @@ namespace TCPClient
                 // connected to the same address as specified by the server, port
                 // combination.
                 Int32 port = 520;
-                string server = "IPAddress Goes Here";
+                string server = "192.168.0.66";
 
 
                 // Prefer using declaration to ensure the instance is Disposed later.
@@ -22,7 +23,7 @@ namespace TCPClient
                 while (true)
                 {
                     Console.Write("Input Message: ");
-                    var message = Console.ReadLine();
+                    var message = Console.ReadLine() ?? "Empty Message";
                     if (message.Equals("exit", StringComparison.OrdinalIgnoreCase))
                     {
                         break;
